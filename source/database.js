@@ -45,7 +45,22 @@ export function getUserData(user_id) {
                     console.error("Error running query: ", err);
                     reject(err);
                 } else {
-                    resolve(rows); // Resolve with rows array
+                    let user = {
+                        username: null,
+                        user_id: null,
+                        campus_code: null,
+                        major_code: null,
+                        codes: [],
+                    }
+                    user.username = rows[0].username;
+                    user.user_id = rows[0].user_id;
+                    user.campus_code = rows[0].campus_code;
+                    user.major_code = rows[0].major_code;
+                    user.codes = rows.map(row => ({
+                        nrc_code: row.nrc_code,
+                        subject_code: row.subject_code,
+                    })).filter(row => row.nrc_code != null);
+                    resolve(user);
                 }
             }
         );
